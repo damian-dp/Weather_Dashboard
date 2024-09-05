@@ -1,0 +1,138 @@
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+@font-face {
+    font-family: 'NeueMontreal';
+    src: url('./fonts/NeueMontreal-Regular.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NeueMontreal';
+    src: url('./fonts/NeueMontreal-Bold.otf') format('otf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NeueMontreal';
+    src: url('./fonts/NeueMontreal-Medium.otf') format('otf');
+    font-weight: medium;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NeueMontreal';
+    src: url('./fonts/NeueMontreal-Light.otf') format('otf');
+    font-weight: light;
+    font-style: normal;
+}
+
+:root {
+    --primary-color: #1d1d1d;
+    --secondary-color: rgba(29, 29, 29, 0.40);
+    --tertiary-color: rgba(29, 29, 29, 0.20);
+    --background-color: #FFF9F1;
+    --transition-duration: 0.3s;
+    --transition-easing: ease-in-out;
+}
+
+* {
+    transition: background-color var(--transition-duration) var(--transition-easing), 
+                color var(--transition-duration) var(--transition-easing), 
+                border-color var(--transition-duration) var(--transition-easing);
+}
+
+body, h1, h2, h3, h4, h5, h6, p, a, span, div {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    transition: background-color var(--transition-duration) var(--transition-easing), 
+                color var(--transition-duration) var(--transition-easing);
+}
+
+body {
+    font-family: 'NeueMontreal', sans-serif;
+}
+
+.page-wrapper {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.light-mode {
+    --primary-color: #1d1d1d;
+    --secondary-color: rgba(29, 29, 29, 0.40);
+    --tertiary-color: rgba(29, 29, 29, 0.20);
+    --background-color: #FFF9F1;
+}
+
+.dark-mode {
+    --primary-color: white;
+    --secondary-color: rgba(255, 255, 255, 0.40);
+    --tertiary-color: rgba(255, 255, 255, 0.20);
+    --background-color: #191919;
+}
+
+nav {
+    border-bottom: 1px solid var(--primary-color);
+    margin-bottom: 0px;
+}
+
+.card {
+    border-right: 1px solid var(--primary-color);
+    width: 500px;
+    margin-right: 2rem;
+    transition: border-color var(--transition-duration) var(--transition-easing), 
+                background-color var(--transition-duration) var(--transition-easing), 
+                color var(--transition-duration) var(--transition-easing);
+}
+
+#cards-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.weather-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+#add-card {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-size: 2rem;
+    border-radius: 100px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding-bottom: 6px;
+}
+
+.button-wrapper {
+    padding-right: 300px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
