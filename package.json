@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A simple dashboard that shows the weather in one or multiple locations.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "cd netlify/functions && npm install"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
