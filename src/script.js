@@ -1,11 +1,64 @@
+import { ensureMinimumLoadingTime, hideLoadingOverlay, showLoadingOverlay } from './loading.js';
+
 let cardsWrapper = document.getElementById("cards-wrapper");
 let currentUnits = "metric";
-let celsiusButton = document.getElementById("celsius");
-let fahrenheitButton = document.getElementById("fahrenheit");
+let tempToggle = document.getElementById("temp-toggle");
 
-document.getElementById('theme-toggle').addEventListener('click', function() {
-    document.documentElement.classList.toggle('dark-mode');
-    document.documentElement.classList.toggle('light-mode');
+const lightModeToggle = document.getElementById('light-mode-toggle');
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+function mapIconCode(code) {
+    const iconMap = {
+        '01': '01', // Clear sky
+        '02': '02', // Few clouds
+        '03': '03', // Scattered clouds
+        '04': '03', // Broken clouds (mapped to Cloudy)
+        '09': '10', // Shower rain (mapped to Rain)
+        '10': '10', // Rain
+        '11': '11', // Thunderstorm
+        '13': '13', // Snow
+        '50': '50'  // Mist
+    };
+    return iconMap[code.slice(0, -1)] || '01'; // Default to clear sky if unknown
+}
+
+function toggleTheme() {
+    const isDarkMode = document.documentElement.classList.toggle('dark-mode');
+    document.documentElement.classList.toggle('light-mode', !isDarkMode);
+    
+    // Update localStorage
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+
+    // Toggle button visibility
+    lightModeToggle.style.display = isDarkMode ? 'none' : 'flex';
+    darkModeToggle.style.display = isDarkMode ? 'flex' : 'none';
+
+    // Remove hover-ready class from both buttons
+    lightModeToggle.classList.remove('hover-ready');
+    darkModeToggle.classList.remove('hover-ready');
+}
+
+function handleButtonMouseLeave(button) {
+    button.classList.add('hover-ready');
+}
+
+lightModeToggle.addEventListener('click', toggleTheme);
+darkModeToggle.addEventListener('click', toggleTheme);
+
+lightModeToggle.addEventListener('mouseleave', () => handleButtonMouseLeave(lightModeToggle));
+darkModeToggle.addEventListener('mouseleave', () => handleButtonMouseLeave(darkModeToggle));
+
+// Set initial state on page load
+document.addEventListener('DOMContentLoaded', (event) => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const isDarkMode = savedTheme === 'dark';
+
+    document.documentElement.classList.toggle('dark-mode', isDarkMode);
+    document.documentElement.classList.toggle('light-mode', !isDarkMode);
+
+    // Set initial button visibility
+    lightModeToggle.style.display = isDarkMode ? 'none' : 'flex';
+    darkModeToggle.style.display = isDarkMode ? 'flex' : 'none';
 });
 
 // Add event listener to the "add-card" button
@@ -77,6 +130,7 @@ async function getWeatherData(lat, lon, units) {
 		location: data.timezone,
 		currentTemp: data.current.temp,
 		currentDesc: data.current.weather[0].description,
+		currentIcon: data.current.weather[0].icon,
 		feelsLike: data.current.feels_like,
 		highTemp: data.daily[0].temp.max,
 		lowTemp: data.daily[0].temp.min,
@@ -86,26 +140,6 @@ async function getWeatherData(lat, lon, units) {
 		pressure: data.current.pressure,
 		hourly: data.hourly.slice(0, 12), // Get next 12 hours forecast
 	};
-}
-
-function getUserLocation() {
-	return new Promise((resolve, reject) => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					resolve({
-						lat: position.coords.latitude,
-						lon: position.coords.longitude,
-					});
-				},
-				(error) => {
-					reject(error);
-				}
-			);
-		} else {
-			reject(new Error("Geolocation is not supported by this browser."));
-		}
-	});
 }
 
 async function getUserLocation() {
@@ -136,19 +170,31 @@ async function getUserLocation() {
 	});
 }
 
+// Modify the renderInitialCard function
 async function renderInitialCard() {
-	try {
-		const { lat, lon } = await getUserLocation();
-		const weatherData = await getWeatherData(lat, lon, currentUnits);
-		const card = createCard(weatherData, lat, lon, currentUnits); // Pass lat, lon, and units
-		if (card instanceof Node) {
-			cardsWrapper.appendChild(card);
-		} else {
-			console.error("createCard did not return a valid Node.");
-		}
-	} catch (error) {
-		console.error("Error getting user location or weather data:", error);
-	}
+    console.log("Rendering initial card");
+    showLoadingOverlay(); // Ensure the overlay is shown
+    try {
+        await ensureMinimumLoadingTime(async () => {
+            console.log("Getting user location");
+            const { lat, lon } = await getUserLocation();
+            console.log("Getting weather data");
+            const weatherData = await getWeatherData(lat, lon, currentUnits);
+            console.log("Creating card");
+            const card = createCard(weatherData, lat, lon, currentUnits);
+            if (card instanceof Node) {
+                cardsWrapper.appendChild(card);
+                console.log("Card appended to wrapper");
+            } else {
+                console.error("createCard did not return a valid Node.");
+            }
+        });
+    } catch (error) {
+        console.error("Error getting user location or weather data:", error);
+    } finally {
+        console.log("Render initial card process completed");
+        hideLoadingOverlay();
+    }
 }
 
 function createCard(weatherData, lat, lon, units) {
@@ -182,6 +228,8 @@ function createCard(weatherData, lat, lon, units) {
 
 	let cardHeroIcon = document.createElement("img");
 	cardHeroIcon.classList.add("card-hero-icon");
+	let mainIconCode = mapIconCode(weatherData.currentIcon);
+	cardHeroIcon.src = `./img/weather-icons/${mainIconCode}.svg`;
 	cardHeroColumn.appendChild(cardHeroIcon);
 
 	let cardHeroDesc = document.createElement("h3");
@@ -248,11 +296,13 @@ function createCard(weatherData, lat, lon, units) {
 
 		let hourIcon = document.createElement("img");
 		hourIcon.classList.add("hour-icon");
+		let iconCode = mapIconCode(hour.weather[0].icon);
+		hourIcon.src = `./img/weather-icons/${iconCode}.svg`;
 		hourWrapper.appendChild(hourIcon);
 
 		let hourTemp = document.createElement("p");
 		hourTemp.classList.add("hour-temp");
-		hourTemp.innerText = hour.temp;
+		hourTemp.innerText = Math.round(hour.temp) + "°";
 		hourWrapper.appendChild(hourTemp);
 	});
 
@@ -328,14 +378,9 @@ function createCard(weatherData, lat, lon, units) {
 }
 
 // Event listeners for buttons
-celsiusButton.addEventListener("click", async () => {
-	currentUnits = "metric";
-	updateAllCards(currentUnits);
-});
-
-fahrenheitButton.addEventListener("click", async () => {
-	currentUnits = "imperial";
-	updateAllCards(currentUnits);
+tempToggle.addEventListener("change", async () => {
+    currentUnits = tempToggle.checked ? "imperial" : "metric";
+    updateAllCards(currentUnits);
 });
 
 // Function to update all cards
@@ -347,7 +392,7 @@ async function updateAllCards(units) {
 		console.log(`Updating card with lat: ${lat}, lon: ${lon}, units: ${units}`); // Debugging log
 		try {
 			const weatherData = await getWeatherData(lat, lon, units);
-			updateCard(card, weatherData);
+			updateCard(card, weatherData, units === "metric" ? "C" : "F");
 		} catch (error) {
 			console.error(`Error updating card with lat: ${lat}, lon: ${lon}`, error);
 		}
@@ -355,7 +400,7 @@ async function updateAllCards(units) {
 }
 
 // Function to update a single card
-function updateCard(card, weatherData) {
+function updateCard(card, weatherData, tempFormat) {
 	const currentTempElement = card.querySelector(".currentTemp");
 	if (currentTempElement) {
 		currentTempElement.innerText = weatherData.currentTemp;
@@ -391,32 +436,31 @@ function updateCard(card, weatherData) {
 		console.error("Low temperature element not found.");
 	}
 
-	const hourlyForecast = card.querySelector(".hourly-forecast");
-	if (hourlyForecast) {
-		hourlyForecast.innerHTML = ""; // Clear existing hourly forecast
+	// Update hourly forecast
+	let hourlyForecast = card.querySelector('.hourly-forecast');
+	hourlyForecast.innerHTML = ''; // Clear existing forecast
 
-		weatherData.hourly.forEach((hour) => {
-			let hourWrapper = document.createElement("div");
-			hourWrapper.classList.add("hour-wrapper");
-			hourlyForecast.appendChild(hourWrapper);
+	weatherData.hourly.forEach((hour) => {
+		let hourWrapper = document.createElement("div");
+		hourWrapper.classList.add("hour-wrapper");
+		hourlyForecast.appendChild(hourWrapper);
 
-			let hourLabel = document.createElement("p");
-			hourLabel.classList.add("hour-label");
-			hourLabel.innerText = new Date(hour.dt * 1000).getHours() + ":00";
-			hourWrapper.appendChild(hourLabel);
+		let hourLabel = document.createElement("p");
+		hourLabel.classList.add("hour-label");
+		hourLabel.innerText = new Date(hour.dt * 1000).getHours() + ":00";
+		hourWrapper.appendChild(hourLabel);
 
-			let hourIcon = document.createElement("img");
-			hourIcon.classList.add("hour-icon");
-			hourWrapper.appendChild(hourIcon);
+		let hourIcon = document.createElement("img");
+		hourIcon.classList.add("hour-icon");
+		let iconCode = mapIconCode(hour.weather[0].icon);
+		hourIcon.src = `./img/weather-icons/${iconCode}.svg`;
+		hourWrapper.appendChild(hourIcon);
 
-			let hourTemp = document.createElement("p");
-			hourTemp.classList.add("hour-temp");
-			hourTemp.innerText = hour.temp;
-			hourWrapper.appendChild(hourTemp);
-		});
-	} else {
-		console.error("Hourly forecast element not found.");
-	}
+		let hourTemp = document.createElement("p");
+		hourTemp.classList.add("hour-temp");
+		hourTemp.innerText = Math.round(tempFormat === 'C' ? hour.temp : celsiusToFahrenheit(hour.temp)) + "°";
+		hourWrapper.appendChild(hourTemp);
+	});
 
 	const humidityElement = card.querySelector(
 		".misc-weather-data .humidityWrapper .misc-data-value"
@@ -453,7 +497,42 @@ function updateCard(card, weatherData) {
 	} else {
 		console.error("Pressure element not found.");
 	}
+
+    // Update temperature unit display
+    const tempUnit = currentUnits === "metric" ? "C" : "°F";
+    const windUnit = currentUnits === "metric" ? "m/s" : "mph";
+
+    if (currentTempElement) {
+        currentTempElement.innerText = `${Math.round(weatherData.currentTemp)}${tempUnit}`;
+    }
+    if (feelsLikeTempElement) {
+        feelsLikeTempElement.innerText = `${Math.round(weatherData.feelsLike)}${tempUnit}`;
+    }
+    if (highTempElement) {
+        highTempElement.innerText = `${Math.round(weatherData.highTemp)}${tempUnit}`;
+    }
+    if (lowTempElement) {
+        lowTempElement.innerText = `${Math.round(weatherData.lowTemp)}${tempUnit}`;
+    }
+    if (windElement) {
+        windElement.innerText = `${Math.round(weatherData.wind)} ${windUnit}`;
+    }
+
+    const cardHeroIcon = card.querySelector(".card-hero-icon");
+    if (cardHeroIcon) {
+        let mainIconCode = mapIconCode(weatherData.currentIcon);
+        cardHeroIcon.src = `./img/weather-icons/${mainIconCode}.svg`;
+    } else {
+        console.error("Card hero icon element not found.");
+    }
+}
+
+function celsiusToFahrenheit(celsius) {
+    return (celsius * 9/5) + 32;
 }
 
 // Initial render
-renderInitialCard();
+window.addEventListener('load', () => {
+    console.log("Window loaded");
+    renderInitialCard();
+});

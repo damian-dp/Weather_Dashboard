@@ -4,17 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/general-styles.css">
+    <link rel="stylesheet" href="css/nav-styles.css">
+    <link rel="stylesheet" href="css/weather-cards.css">
 </head>
 <body>
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
     <div class="page-wrapper">
         <nav>
-            <!-- <img src="logo.svg" alt="website logo"> -->
-            <div class="temp-format">
-                <button id="celsius">°C</button>
-                <button id="fahrenheit">°F</button>
+            <div class="logo-placeholder">LOGO</div>
+            <div class="nav-right">
+                <div class="temp-format-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="temp-toggle">
+                        <span class="slider round">
+                            <span class="temp-label celsius">°C</span>
+                            <span class="temp-label fahrenheit">°F</span>
+                        </span>
+                    </label>
+                </div>
+                <!-- Replace the existing theme-toggle buttons with these updated versions -->
+                <button id="light-mode-toggle" class="theme-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button id="dark-mode-toggle" class="theme-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
             </div>
-            <button id="theme-toggle">Toggle Theme</button>
         </nav>
 
         <section class="weather-cards">
@@ -25,7 +47,9 @@
                 <button id="add-card">+</button>
             </div>
         </section>
+
     </div>
-    <script src="script.js"></script>
+    <script src="loading.js" type="module"></script>
+    <script src="script.js" type="module"></script>
 </body>
 </html>
