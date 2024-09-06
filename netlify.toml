@@ -1,11 +1,16 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && sed -i 's|${process.env.OPENWEATHER_API_KEY}|'$OPENWEATHER_API_KEY'|g; s|${process.env.GOOGLE_MAPS_API_KEY}|'$GOOGLE_MAPS_API_KEY'|g' src/js/script.js"
   publish = "src"
   functions = "netlify/functions"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [functions]

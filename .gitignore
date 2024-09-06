@@ -5,7 +5,8 @@ node_modules/
 .env
 
 # Netlify
-.netlify/
+.netlify/state.json
+.netlify/edge-functions-import-map.json
 
 # Build output
 dist/
@@ -37,15 +38,6 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
-# Netlify Function build
-/netlify/functions/*.js
-
-# Cache directories
-.cache/
-.netlify/
-
 # Misc
 *.bak
 *.backup
-
-DS_Store

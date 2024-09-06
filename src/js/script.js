@@ -7,8 +7,8 @@ let tempToggle = document.getElementById("temp-toggle");
 const lightModeToggle = document.getElementById('light-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || 'your_fallback_key_here';
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || 'your_fallback_key_here';
+const OPENWEATHER_API_KEY = '${process.env.OPENWEATHER_API_KEY}';
+const GOOGLE_MAPS_API_KEY = '${process.env.GOOGLE_MAPS_API_KEY}';
 
 function mapIconCode(code) {
     if (!code) {
@@ -200,7 +200,7 @@ async function getWeatherDataByLocation(location, units) {
 
 async function getWeatherData(lat, lon, units) {
     let response = await fetch(
-        `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
+        `/api/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
     );
 
     if (!response.ok) {
