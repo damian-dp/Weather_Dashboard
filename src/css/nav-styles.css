@@ -2,7 +2,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--primary-color);
 }
 
@@ -151,4 +151,16 @@ input:not(:checked) + .slider .temp-label.fahrenheit {
 
 .dark-mode #dark-mode-toggle {
     display: flex;
+}
+
+/* Update these rules at the end of the file */
+.navbar-logo svg {
+    height: 42px;
+    width: auto;
+    transition: fill var(--transition-duration) var(--transition-easing);
+}
+
+.navbar-logo svg .logo-path {
+    fill: var(--primary-color);
+    transition: fill var(--transition-duration) var(--transition-easing);
 }

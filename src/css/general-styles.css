@@ -3,6 +3,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color var(--transition-duration) var(--transition-easing),
+                color var(--transition-duration) var(--transition-easing),
+                border-color var(--transition-duration) var(--transition-easing);
 }
 
 button, input[type="submit"], input[type="reset"] {
@@ -17,29 +20,36 @@ button, input[type="submit"], input[type="reset"] {
 
 @font-face {
     font-family: 'NeueMontreal';
-    src: url('../fonts/NeueMontreal-Regular.otf') format('otf');
-    font-weight: normal;
+    src: url('../fonts/NeueMontreal-Regular.otf') format('opentype');
+    font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'NeueMontreal';
-    src: url('../fonts/NeueMontreal-Bold.otf') format('otf');
-    font-weight: bold;
+    src: url('../fonts/NeueMontreal-Bold.otf') format('opentype');
+    font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'NeueMontreal';
-    src: url('../fonts/NeueMontreal-Medium.otf') format('otf');
-    font-weight: medium;
+    src: url('../fonts/NeueMontreal-Book.otf') format('opentype');
+    font-weight: 200;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'NeueMontreal';
-    src: url('../fonts/NeueMontreal-Light.otf') format('otf');
-    font-weight: light;
+    src: url('../fonts/NeueMontreal-Medium.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NeueMontreal';
+    src: url('../fonts/NeueMontreal-Light.otf') format('opentype');
+    font-weight: 100;
     font-style: normal;
 }
 
@@ -48,25 +58,27 @@ button, input[type="submit"], input[type="reset"] {
     --secondary-color: rgba(29, 29, 29, 0.40);
     --tertiary-color: rgba(29, 29, 29, 0.20);
     --background-color: #FFF9F1;
+    --background-color-rgb: 255, 249, 241; /* Add this line */
     --solid-color: white;
     --transition-duration: 0.3s;
     --transition-easing: ease-in-out;
-}
-
-* {
-    transition: background-color var(--transition-duration) var(--transition-easing), 
-                color var(--transition-duration) var(--transition-easing), 
-                border-color var(--transition-duration) var(--transition-easing);
+    --map-background-color: #FFF9F1;
+    --map-background-color-rgb: 255, 249, 241;
 }
 
 body, h1, h2, h3, h4, h5, h6, p, a, span, div {
     color: var(--primary-color);
-    transition: background-color var(--transition-duration) var(--transition-easing), 
-                color var(--transition-duration) var(--transition-easing);
+    transition: color var(--transition-duration) var(--transition-easing),
+                background-color var(--transition-duration) var(--transition-easing);
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: 1.25rem;
+    letter-spacing: 0.03em;
 }
 
 body {
     font-family: 'NeueMontreal', sans-serif;
+    font-weight: 300;
     background-color: var(--background-color);
     color: var(--primary-color);
 }
@@ -89,7 +101,10 @@ body {
     --secondary-color: rgba(255, 255, 255, 0.40);
     --tertiary-color: rgba(255, 255, 255, 0.20);
     --background-color: #191919;
+    --background-color-rgb: 25, 25, 25; /* Add this line */
     --solid-color: rgb(24, 24, 24);
+    --map-background-color: #191919;
+    --map-background-color-rgb: 25, 25, 25;
 }
 
 html {
@@ -128,4 +143,15 @@ html {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+svg, svg * {
+    transition: fill var(--transition-duration) var(--transition-easing),
+                stroke var(--transition-duration) var(--transition-easing);
+}
+
+*::before, *::after {
+    transition: background-color var(--transition-duration) var(--transition-easing), 
+                color var(--transition-duration) var(--transition-easing), 
+                border-color var(--transition-duration) var(--transition-easing);
 }
