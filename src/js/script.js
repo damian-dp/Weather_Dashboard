@@ -490,7 +490,14 @@ function createCard(weatherData, lat, lon, units) {
         hourIcon.classList.add("hour-icon");
         let iconCode = hour.weather && hour.weather[0] && hour.weather[0].icon ? mapIconCode(hour.weather[0].icon) : '01';
         getSvgContent(iconCode).then(svgContent => {
-            hourIcon.innerHTML = svgContent;
+            if (svgContent) {
+                hourIcon.innerHTML = svgContent;
+            } else {
+                hourIcon.textContent = iconCode; // Fallback to show the icon code as text
+            }
+        }).catch(error => {
+            console.error('Error setting SVG content:', error);
+            hourIcon.textContent = 'Error'; // Show 'Error' text if SVG fails to load
         });
         hourWrapper.appendChild(hourIcon);
 
@@ -803,7 +810,14 @@ function updateCard(card, weatherData, tempFormat) {
         hourIcon.classList.add("hour-icon");
         let iconCode = hour.weather && hour.weather[0] && hour.weather[0].icon ? mapIconCode(hour.weather[0].icon) : '01';
         getSvgContent(iconCode).then(svgContent => {
-            hourIcon.innerHTML = svgContent;
+            if (svgContent) {
+                hourIcon.innerHTML = svgContent;
+            } else {
+                hourIcon.textContent = iconCode; // Fallback to show the icon code as text
+            }
+        }).catch(error => {
+            console.error('Error setting SVG content:', error);
+            hourIcon.textContent = 'Error'; // Show 'Error' text if SVG fails to load
         });
         hourWrapper.appendChild(hourIcon);
 
@@ -875,11 +889,12 @@ function getSvgContent(iconCode) {
             return response.text();
         })
         .then(svgText => {
-            // Extract only the <svg> content
+            console.log('SVG content:', svgText); // Log the SVG content
             const parser = new DOMParser();
             const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
             const svgElement = svgDoc.querySelector('svg');
             if (svgElement) {
+                console.log('Parsed SVG:', svgElement.outerHTML); // Log the parsed SVG
                 return svgElement.outerHTML;
             } else {
                 console.error('No SVG element found in the response');
