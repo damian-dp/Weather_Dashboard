@@ -1,5 +1,9 @@
-[build]
-  functions = "netlify/functions"
+   [build]
+     publish = "src"
+     functions = "netlify/functions"
+     command = "cp -r netlify/functions src/"
 
-[dev]
-  functions = "netlify/functions"
+   [[redirects]]
+     from = "/*"
+     to = "/index.html"
+     status = 200
