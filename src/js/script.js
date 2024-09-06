@@ -874,6 +874,18 @@ function getSvgContent(iconCode) {
             }
             return response.text();
         })
+        .then(svgText => {
+            // Extract only the <svg> content
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+            const svgElement = svgDoc.querySelector('svg');
+            if (svgElement) {
+                return svgElement.outerHTML;
+            } else {
+                console.error('No SVG element found in the response');
+                return '';
+            }
+        })
         .catch(error => {
             console.error('Error fetching SVG:', error);
             return '';
