@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cd netlify/functions && npm install"
+    
   },
   "keywords": [],
   "author": "",
