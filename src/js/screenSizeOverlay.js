@@ -11,7 +11,7 @@ function checkScreenSize() {
     const height = window.innerHeight;
     console.log('Window dimensions:', width, 'x', height); // Debug log
 
-    if (width < 1000 || height < 900) {
+    if (width < 1000 || height < 890) {
         console.log('Showing overlay'); // Debug log
         screenSizeOverlay.classList.remove('hidden');
     } else {
