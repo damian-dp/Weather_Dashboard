@@ -1,24 +1,20 @@
 // Function to hide the loading overlay
-function hideLoadingOverlay() {
+export function hideLoadingOverlay() {
     console.log("Hiding loading overlay");
-    const overlay = document.getElementById('loading-overlay');
+    const overlay = document.getElementById('global-loading-overlay');
     overlay.classList.add('fade-out');
-    setTimeout(() => {
-        overlay.style.display = 'none';
-        console.log("Loading overlay hidden");
-    }, 500); // Match this to the CSS transition duration
+    // We don't need to set display: none anymore, as visibility: hidden will do the job
 }
 
 // Function to show the loading overlay
-function showLoadingOverlay() {
+export function showLoadingOverlay() {
     console.log("Showing loading overlay");
-    const overlay = document.getElementById('loading-overlay');
-    overlay.style.display = 'flex';
+    const overlay = document.getElementById('global-loading-overlay');
     overlay.classList.remove('fade-out');
 }
 
 // Function to ensure minimum loading time
-function ensureMinimumLoadingTime(callback, minTime = 3000) {
+export function ensureMinimumLoadingTime(callback, minTime = 1000) {
     console.log("Ensuring minimum loading time");
     const startTime = Date.now();
     return new Promise((resolve) => {
@@ -39,6 +35,3 @@ function ensureMinimumLoadingTime(callback, minTime = 3000) {
         });
     });
 }
-
-// Export the functions
-export { hideLoadingOverlay, showLoadingOverlay, ensureMinimumLoadingTime };

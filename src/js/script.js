@@ -1,5 +1,3 @@
-import { ensureMinimumLoadingTime, hideLoadingOverlay, showLoadingOverlay } from './loading.js';
-
 let cardsWrapper = document.getElementById("cards-wrapper");
 let currentUnits = "metric";
 let tempToggle = document.getElementById("temp-toggle");
@@ -294,6 +292,9 @@ async function getUserLocation() {
     });
 }
 
+// At the top of the file, import the loading functions
+import { showLoadingOverlay, hideLoadingOverlay, ensureMinimumLoadingTime } from './loading.js';
+
 // Modify the renderInitialCard function
 async function renderInitialCard() {
     console.log("Rendering initial card");
@@ -323,6 +324,26 @@ async function renderInitialCard() {
         cardsWrapper.appendChild(errorMessage);
     } finally {
         console.log("Render initial card process completed");
+        hideLoadingOverlay();
+    }
+}
+
+// Modify the function that adds new cards (if you have one) to use the global loading overlay
+async function addNewCard(location) {
+    showLoadingOverlay();
+    try {
+        const { weatherData, lat, lon } = await getWeatherDataByLocation(location, currentUnits);
+        const card = createCard(weatherData, lat, lon, currentUnits);
+        if (card instanceof Node) {
+            cardsWrapper.appendChild(card);
+            await initMap(card.querySelector('.map-container'), lat, lon);
+        } else {
+            console.error("createCard did not return a valid Node.");
+        }
+    } catch (error) {
+        console.error("Error adding new card:", error);
+        // Handle error (e.g., show an error message to the user)
+    } finally {
         hideLoadingOverlay();
     }
 }
