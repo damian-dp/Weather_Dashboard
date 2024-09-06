@@ -201,7 +201,11 @@ async function getWeatherDataByLocation(location, units) {
 async function getWeatherData(lat, lon, units) {
     try {
         let response = await fetch(
-            `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
+            `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`,
+            {
+                credentials: 'same-origin',
+                mode: 'cors'
+            }
         );
 
         let text = await response.text();

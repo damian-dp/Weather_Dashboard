@@ -23,6 +23,10 @@ exports.handler = async function(event, context) {
     console.log('Successful response from OpenWeather API');
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*", // Allow all origins
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
       body: JSON.stringify(response.data)
     };
   } catch (error) {
@@ -30,6 +34,10 @@ exports.handler = async function(event, context) {
     console.error('Error details:', error.response?.data);
     return {
       statusCode: error.response?.status || 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*", // Allow all origins
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
       body: JSON.stringify({
         error: error.message,
         details: error.response?.data || 'No additional details'
