@@ -328,18 +328,20 @@ async function renderInitialCard() {
     }
 }
 
-// Modify the function that adds new cards (if you have one) to use the global loading overlay
+// Modify the function that adds new cards
 async function addNewCard(location) {
     showLoadingOverlay();
     try {
-        const { weatherData, lat, lon } = await getWeatherDataByLocation(location, currentUnits);
-        const card = createCard(weatherData, lat, lon, currentUnits);
-        if (card instanceof Node) {
-            cardsWrapper.appendChild(card);
-            await initMap(card.querySelector('.map-container'), lat, lon);
-        } else {
-            console.error("createCard did not return a valid Node.");
-        }
+        await ensureMinimumLoadingTime(async () => {
+            const { weatherData, lat, lon } = await getWeatherDataByLocation(location, currentUnits);
+            const card = createCard(weatherData, lat, lon, currentUnits);
+            if (card instanceof Node) {
+                cardsWrapper.appendChild(card);
+                await initMap(card.querySelector('.map-container'), lat, lon);
+            } else {
+                console.error("createCard did not return a valid Node.");
+            }
+        });
     } catch (error) {
         console.error("Error adding new card:", error);
         // Handle error (e.g., show an error message to the user)
