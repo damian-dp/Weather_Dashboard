@@ -1,12 +1,12 @@
 [build]
-    publish = "src"
-    functions = "netlify/functions"
-    command = "cp -r netlify/functions src/"
+  command = "npm run build"
+  publish = "src"
+  functions = "netlify/functions"
 
 [[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [functions]
-    directory = "netlify/functions"
+  directory = "netlify/functions"

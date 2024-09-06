@@ -7,8 +7,8 @@ let tempToggle = document.getElementById("temp-toggle");
 const lightModeToggle = document.getElementById('light-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-const OPENWEATHER_API_KEY = '${OPENWEATHER_API_KEY}' || 'your_fallback_key_here';
-const GOOGLE_MAPS_API_KEY = '${GOOGLE_MAPS_API_KEY}' || 'your_fallback_key_here';
+const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || 'your_fallback_key_here';
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || 'your_fallback_key_here';
 
 function mapIconCode(code) {
     if (!code) {
