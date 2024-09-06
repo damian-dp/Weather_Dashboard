@@ -490,14 +490,11 @@ function createCard(weatherData, lat, lon, units) {
         hourIcon.classList.add("hour-icon");
         let iconCode = hour.weather && hour.weather[0] && hour.weather[0].icon ? mapIconCode(hour.weather[0].icon) : '01';
         getSvgContent(iconCode).then(svgContent => {
-            if (svgContent) {
-                hourIcon.innerHTML = svgContent;
-            } else {
-                hourIcon.textContent = iconCode; // Fallback to show the icon code as text
-            }
+            console.log('Setting SVG content:', svgContent);
+            hourIcon.innerHTML = svgContent;
         }).catch(error => {
             console.error('Error setting SVG content:', error);
-            hourIcon.textContent = 'Error'; // Show 'Error' text if SVG fails to load
+            hourIcon.textContent = iconCode; // Fallback to show the icon code as text
         });
         hourWrapper.appendChild(hourIcon);
 
@@ -810,14 +807,11 @@ function updateCard(card, weatherData, tempFormat) {
         hourIcon.classList.add("hour-icon");
         let iconCode = hour.weather && hour.weather[0] && hour.weather[0].icon ? mapIconCode(hour.weather[0].icon) : '01';
         getSvgContent(iconCode).then(svgContent => {
-            if (svgContent) {
-                hourIcon.innerHTML = svgContent;
-            } else {
-                hourIcon.textContent = iconCode; // Fallback to show the icon code as text
-            }
+            console.log('Setting SVG content:', svgContent);
+            hourIcon.innerHTML = svgContent;
         }).catch(error => {
             console.error('Error setting SVG content:', error);
-            hourIcon.textContent = 'Error'; // Show 'Error' text if SVG fails to load
+            hourIcon.textContent = iconCode; // Fallback to show the icon code as text
         });
         hourWrapper.appendChild(hourIcon);
 
@@ -889,22 +883,25 @@ function getSvgContent(iconCode) {
             return response.text();
         })
         .then(svgText => {
-            console.log('SVG content:', svgText); // Log the SVG content
-            const parser = new DOMParser();
-            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-            const svgElement = svgDoc.querySelector('svg');
-            if (svgElement) {
-                console.log('Parsed SVG:', svgElement.outerHTML); // Log the parsed SVG
-                return svgElement.outerHTML;
+            console.log('SVG content:', svgText);
+            if (svgText.trim().startsWith('<svg')) {
+                return svgText;
             } else {
-                console.error('No SVG element found in the response');
-                return '';
+                console.error('Invalid SVG content received');
+                return getFallbackSvg(iconCode);
             }
         })
         .catch(error => {
             console.error('Error fetching SVG:', error);
-            return '';
+            return getFallbackSvg(iconCode);
         });
+}
+
+function getFallbackSvg(iconCode) {
+    // Provide a simple fallback SVG based on the icon code
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="12">${iconCode}</text>
+    </svg>`;
 }
 
 // Add this helper function at the end of your script

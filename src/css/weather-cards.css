@@ -361,8 +361,8 @@ h1.currentTemp {
     right: 0;
     height: 100%;
     background: linear-gradient(to bottom, 
-                var(--map-background-color) 0%, 
-                rgba(var(--map-background-color-rgb), 0.5) 100%);
+                var(--map-background-color) 5%, 
+                rgba(var(--map-background-color-rgb), 0.55) 100%);
     z-index: 1;
     pointer-events: none;
     transition: opacity 0.2s ease-out;
