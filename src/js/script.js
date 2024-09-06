@@ -7,6 +7,9 @@ let tempToggle = document.getElementById("temp-toggle");
 const lightModeToggle = document.getElementById('light-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
+const OPENWEATHER_API_KEY = '${process.env.OPENWEATHER_API_KEY}' || 'your_fallback_key_here';
+const GOOGLE_MAPS_API_KEY = '${process.env.GOOGLE_MAPS_API_KEY}' || 'your_fallback_key_here';
+
 function mapIconCode(code) {
     if (!code) {
         console.error('Invalid weather icon code:', code);
@@ -175,9 +178,8 @@ document.getElementById("add-card").addEventListener("click", async () => {
 
 // Function to fetch weather data by location
 async function getWeatherDataByLocation(location, units) {
-    const apiKey = "e928c0a0551ec38eb38eefd5e0f079c0";
     const geocodingResponse = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${apiKey}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${OPENWEATHER_API_KEY}`
     );
 
     if (!geocodingResponse.ok) {
@@ -197,10 +199,8 @@ async function getWeatherDataByLocation(location, units) {
 }
 
 async function getWeatherData(lat, lon, units) {
-    const apiKey = "e928c0a0551ec38eb38eefd5e0f079c0";
-
     let response = await fetch(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${apiKey}`
+        `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
     );
 
     if (!response.ok) {
@@ -211,7 +211,7 @@ async function getWeatherData(lat, lon, units) {
 
     // Fetch city and country information
     let geoResponse = await fetch(
-        `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${apiKey}`
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`
     );
     let geoData = await geoResponse.json();
     
@@ -543,7 +543,7 @@ function loadGoogleMapsAPI() {
         };
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBRZYXBL5NFG8uP7K7gRRx8_8IwJ5NS1ys&callback=initGoogleMaps`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initGoogleMaps`;
         script.async = true;
         script.defer = true;
         script.onerror = reject;
