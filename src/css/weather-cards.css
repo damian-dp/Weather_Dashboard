@@ -24,6 +24,7 @@
     flex-wrap: nowrap;
     min-height: 100%;
     padding-bottom: 20px;
+    transition: width 0.5s ease-out; /* Add this line */
 }
 
 .weather-cards {

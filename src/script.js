@@ -120,8 +120,8 @@ document.getElementById("add-card").addEventListener("click", async () => {
             const { weatherData, lat, lon } = await getWeatherDataByLocation(location, currentUnits);
             const card = createCard(weatherData, lat, lon, currentUnits);
             if (card instanceof Node) {
-                // Force scroll to the end before adding the new card
-                cardsWrapper.scrollLeft = cardsWrapper.scrollWidth;
+                // Get the current width of the wrapper
+                const currentWidth = cardsWrapper.scrollWidth;
 
                 // Temporarily set all existing cards to a higher z-index
                 document.querySelectorAll('.card').forEach(existingCard => {
@@ -131,16 +131,29 @@ document.getElementById("add-card").addEventListener("click", async () => {
                 // Add the new card
                 cardsWrapper.appendChild(card);
 
+                // Get the new width after adding the card
+                const newWidth = cardsWrapper.scrollWidth;
+
+                // Set the wrapper width to the current width
+                cardsWrapper.style.width = `${currentWidth}px`;
+
+                // Force a reflow
+                cardsWrapper.offsetHeight;
+
+                // Animate to the new width
+                cardsWrapper.style.width = `${newWidth}px`;
+
                 // Trigger the slide-in animation after a short delay
                 setTimeout(() => {
                     card.classList.add('slide-in');
                 }, 50);
 
-                // Reset z-index of existing cards after the animation
+                // Reset z-index of existing cards and remove the explicit width after the animation
                 setTimeout(() => {
                     document.querySelectorAll('.card').forEach(existingCard => {
                         existingCard.style.zIndex = '';
                     });
+                    cardsWrapper.style.width = '';
                 }, 550); // This should match the transition duration + 50ms
 
                 // Scroll to the new card
