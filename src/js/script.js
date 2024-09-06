@@ -175,7 +175,7 @@ document.getElementById("add-card").addEventListener("click", async () => {
 
 // Function to fetch weather data by location
 async function getWeatherDataByLocation(location, units) {
-    const apiKey = "e928c0a0551ec38eb38eefd5e0f079c0";
+    const apiKey = "8567c1dc43068a74a379569c61343393";
     const geocodingResponse = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${apiKey}`
     );
@@ -197,7 +197,7 @@ async function getWeatherDataByLocation(location, units) {
 }
 
 async function getWeatherData(lat, lon, units) {
-    const apiKey = "e928c0a0551ec38eb38eefd5e0f079c0";
+    const apiKey = "8567c1dc43068a74a379569c61343393";
 
     let response = await fetch(
         `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${apiKey}`
