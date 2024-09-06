@@ -13,6 +13,7 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(data)
     };
   } catch (error) {
+    console.error('Error fetching weather data:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed fetching weather data' })

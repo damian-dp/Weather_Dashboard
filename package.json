@@ -13,5 +13,8 @@
   "devDependencies": {
     "dotenv": "^16.4.5",
     "http-proxy-middleware": "^3.0.2"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }

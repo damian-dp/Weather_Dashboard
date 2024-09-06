@@ -5,13 +5,8 @@ let tempToggle = document.getElementById("temp-toggle");
 const lightModeToggle = document.getElementById('light-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-const OPENWEATHER_API_KEY = typeof process !== 'undefined' && process.env.OPENWEATHER_API_KEY 
-    ? process.env.OPENWEATHER_API_KEY 
-    : window.env?.OPENWEATHER_API_KEY || '';
-
-const GOOGLE_MAPS_API_KEY = typeof process !== 'undefined' && process.env.GOOGLE_MAPS_API_KEY 
-    ? process.env.GOOGLE_MAPS_API_KEY 
-    : window.env?.GOOGLE_MAPS_API_KEY || '';
+const OPENWEATHER_API_KEY = window.env?.OPENWEATHER_API_KEY || '';
+const GOOGLE_MAPS_API_KEY = window.env?.GOOGLE_MAPS_API_KEY || '';
 
 // Add a check to ensure the keys are available
 if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
@@ -350,7 +345,7 @@ function createCard(weatherData, lat, lon, units) {
 
     let cardHeroDesc = document.createElement("h3");
     cardHeroDesc.classList.add("currentDesc");
-    cardHeroDesc.innerText = capitalizeWords(weatherData.currentDesc);
+    cardHeroDesc.textContent = capitalizeWords(weatherData.current?.weather?.[0]?.description || '');
     cardHeroColumn.appendChild(cardHeroDesc);
 
     // Create flexible spacer with map container inside
@@ -833,7 +828,7 @@ function celsiusToFahrenheit(celsius) {
 }
 
 function getSvgContent(iconCode) {
-    const url = `/src/img/weather-icons/${iconCode}.svg`;
+    const url = `/img/weather-icons/${iconCode}.svg`;
     console.log('Fetching SVG from:', url);
     return fetch(url)
         .then(response => {
@@ -846,6 +841,9 @@ function getSvgContent(iconCode) {
             console.log('SVG content:', svgText);
             if (svgText.trim().startsWith('<svg')) {
                 return svgText;
+            } else if (svgText.includes('<html')) {
+                console.error('Received HTML instead of SVG');
+                return getFallbackSvg(iconCode);
             } else {
                 console.error('Invalid SVG content received');
                 return getFallbackSvg(iconCode);
@@ -866,6 +864,7 @@ function getFallbackSvg(iconCode) {
 
 // Add this helper function at the end of your script
 function capitalizeWords(str) {
+    if (!str) return ''; // Return an empty string if input is undefined or null
     return str.replace(/\b\w/g, char => char.toUpperCase());
 }
 
