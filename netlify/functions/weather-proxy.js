@@ -2,12 +2,13 @@ const axios = require('axios');
 
 exports.handler = async function(event, context) {
   console.log('Function invoked with query parameters:', event.queryStringParameters);
-  const { lat, lon, units } = event.queryStringParameters;
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const { lat, lon, units, apiKey } = event.queryStringParameters;
+  const finalApiKey = apiKey || process.env.OPENWEATHER_API_KEY;
 
-  console.log('API Key available:', !!apiKey);
+  console.log('API Key available:', !!finalApiKey);
+  console.log('API Key:', finalApiKey); // Log the actual API key for debugging
 
-  if (!apiKey) {
+  if (!finalApiKey) {
     console.error('API key is not set');
     return {
       statusCode: 500,
@@ -15,8 +16,8 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${apiKey}`;
-  console.log('Requesting URL:', url);
+  const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${finalApiKey}`;
+  console.log('Full URL being requested:', url);
 
   try {
     const response = await axios.get(url);
@@ -35,12 +36,13 @@ exports.handler = async function(event, context) {
     return {
       statusCode: error.response?.status || 500,
       headers: {
-        "Access-Control-Allow-Origin": "*", // Allow all origins
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
       },
       body: JSON.stringify({
         error: error.message,
-        details: error.response?.data || 'No additional details'
+        details: error.response?.data || 'No additional details',
+        url: url // Include the requested URL in the error response
       })
     };
   }

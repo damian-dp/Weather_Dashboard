@@ -11,6 +11,11 @@
   to = "/index.html"
   status = 200
 
+[[redirects]]
+    from = "/env.js"
+    to = "/src/env.js"
+    status = 200
+
 [build.environment]
     NODE_VERSION = "14"
 
@@ -21,3 +26,9 @@
     for = "/*.svg"
     [headers.values]
     Content-Type = "image/svg+xml"
+
+[[headers]]
+    for = "/env.js"
+    [headers.values]
+    Content-Type = "application/javascript"
+    Access-Control-Allow-Origin = "*"

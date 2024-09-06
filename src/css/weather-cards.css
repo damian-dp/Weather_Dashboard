@@ -24,7 +24,7 @@
     flex-wrap: nowrap;
     min-height: 100%;
     padding-bottom: 20px;
-    transition: width 0.5s ease-out; /* Add this line */
+    transition: width 0.5s ease-out;
 }
 
 .weather-cards {
@@ -361,7 +361,7 @@ h1.currentTemp {
     right: 0;
     height: 100%;
     background: linear-gradient(to bottom, 
-                var(--map-background-color) 5%, 
+                var(--map-background-color) 0%, 
                 rgba(var(--map-background-color-rgb), 0.55) 100%);
     z-index: 1;
     pointer-events: none;
@@ -440,4 +440,9 @@ h1.currentTemp {
 
 .card.new-card {
     z-index: 0;
+}
+
+.card.initial-card {
+    transform: translateX(0);
+    opacity: 1;
 }
