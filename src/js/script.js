@@ -5,8 +5,18 @@ let tempToggle = document.getElementById("temp-toggle");
 const lightModeToggle = document.getElementById('light-mode-toggle');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-const OPENWEATHER_API_KEY = '${process.env.OPENWEATHER_API_KEY}';
-const GOOGLE_MAPS_API_KEY = '${process.env.GOOGLE_MAPS_API_KEY}';
+const OPENWEATHER_API_KEY = typeof process !== 'undefined' && process.env.OPENWEATHER_API_KEY 
+    ? process.env.OPENWEATHER_API_KEY 
+    : window.env?.OPENWEATHER_API_KEY || '';
+
+const GOOGLE_MAPS_API_KEY = typeof process !== 'undefined' && process.env.GOOGLE_MAPS_API_KEY 
+    ? process.env.GOOGLE_MAPS_API_KEY 
+    : window.env?.GOOGLE_MAPS_API_KEY || '';
+
+// Add a check to ensure the keys are available
+if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
+  console.error('API keys are not set. Please check your environment variables or env.js file.');
+}
 
 function mapIconCode(code) {
     if (!code) {
@@ -197,67 +207,17 @@ async function getWeatherDataByLocation(location, units) {
 }
 
 async function getWeatherData(lat, lon, units) {
+    const url = `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`;
     try {
-        let response = await fetch(
-            `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`,
-            {
-                credentials: 'same-origin',
-                mode: 'cors'
-            }
-        );
-
-        let text = await response.text();
-        console.log('Raw API response:', text);
-
+        const response = await fetch(url);
         if (!response.ok) {
-            console.error(`API call failed with status ${response.status}`);
-            console.error('Response body:', text);
+            console.error('API call failed with status', response.status);
+            console.error('Response body:', await response.text());
             throw new Error(`API call failed with status ${response.status}`);
         }
-
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (parseError) {
-            console.error('Error parsing JSON:', parseError);
-            console.error('Problematic response:', text);
-            if (text.trim().startsWith('<')) {
-                throw new Error('API returned HTML instead of JSON. There might be a server-side error.');
-            } else {
-                throw new Error('Invalid JSON response from API');
-            }
-        }
-
-        // Fetch city and country information
-        let geoResponse = await fetch(
-            `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`
-        );
-        let geoData = await geoResponse.json();
-        
-        let cityCountry;
-        if (geoData[0]) {
-            const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(geoData[0].country);
-            cityCountry = `${geoData[0].name}, ${countryName}`;
-        } else {
-            cityCountry = data.timezone;
-        }
-
-        return {
-            location: cityCountry,
-            lat: lat,
-            lon: lon,
-            currentTemp: data.current.temp,
-            currentDesc: data.current.weather[0].description,
-            currentIcon: data.current.weather[0].icon,
-            feelsLike: data.current.feels_like,
-            highTemp: data.daily[0].temp.max,
-            lowTemp: data.daily[0].temp.min,
-            humidity: data.current.humidity,
-            uvIndex: data.current.uvi,
-            wind: data.current.wind_speed,
-            pressure: data.current.pressure,
-            hourly: data.hourly.slice(0, 12), // Get next 12 hours forecast
-        };
+        const data = await response.json();
+        console.log('Raw API response:', JSON.stringify(data, null, 2));
+        return data;
     } catch (error) {
         console.error('Error in getWeatherData:', error);
         throw error;
