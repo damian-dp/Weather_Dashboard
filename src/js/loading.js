@@ -22,7 +22,9 @@ function ensureMinimumLoadingTime(callback, minTime = 3000) {
     console.log("Ensuring minimum loading time");
     const startTime = Date.now();
     return new Promise((resolve) => {
-        callback().then(() => {
+        const runCallback = callback ? callback() : Promise.resolve();
+        
+        Promise.resolve(runCallback).then(() => {
             const elapsedTime = Date.now() - startTime;
             const remainingTime = Math.max(0, minTime - elapsedTime);
             console.log(`Elapsed time: ${elapsedTime}ms, Remaining time: ${remainingTime}ms`);

@@ -7,7 +7,34 @@
     <link rel="stylesheet" href="css/general-styles.css">
     <link rel="stylesheet" href="css/nav-styles.css">
     <link rel="stylesheet" href="css/weather-cards.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRZYXBL5NFG8uP7K7gRRx8_8IwJ5NS1ys"></script>
+    <link rel="stylesheet" href="css/screen-size-overlay.css">
+    <!-- <script>
+        window.googleMapsApiLoaded = false;
+        window.google = { maps: {} };
+    </script> -->
+    <!-- <script>
+        function initGoogleMaps() {
+            console.log('Google Maps API loaded');
+            if (typeof initializeMaps === 'function') {
+                initializeMaps();
+            }
+        }
+
+        function loadGoogleMapsAPI() {
+            if (!window.googleMapsApiLoaded) {
+                const script = document.createElement('script');
+                script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBRZYXBL5NFG8uP7K7gRRx8_8IwJ5NS1ys&callback=initGoogleMaps';
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+                window.googleMapsApiLoaded = true;
+            } else if (window.google && window.google.maps) {
+                initGoogleMaps();
+            }
+        }
+
+        window.addEventListener('load', loadGoogleMapsAPI);
+    </script> -->
 </head>
 <body>
     <div id="loading-overlay">
@@ -57,7 +84,13 @@
         </section>
 
     </div>
-    <script src="loading.js" type="module"></script>
-    <script src="script.js" type="module"></script>
+    <div id="screen-size-overlay" class="hidden">
+        <div class="overlay-message">
+            <p>Please increase your window size or use a larger device for the best experience.</p>
+        </div>
+    </div>
+    <script src="./js/loading.js" type="module"></script>
+    <script src="./js/script.js" type="module"></script>
+    <script src="./js/screenSizeOverlay.js"></script>
 </body>
 </html>
