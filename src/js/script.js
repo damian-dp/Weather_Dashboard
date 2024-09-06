@@ -474,18 +474,16 @@ function createCard(weatherData, lat, lon, units) {
     weatherData.hourly.forEach((hour) => {
         let hourWrapper = document.createElement("div");
         hourWrapper.classList.add("hour-wrapper");
-        hourlyForecast.appendChild(hourWrapper);
 
         let hourLabel = document.createElement("p");
         hourLabel.classList.add("hour-label");
-        // Convert the hour to 12-hour format with lowercase am/pm without space
         let date = new Date(hour.dt * 1000);
         let hours = date.getHours();
         let ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
         let formattedTime = `${hours}${ampm}`;
-        hourLabel.innerText = formattedTime;
+        hourLabel.textContent = formattedTime;
         hourWrapper.appendChild(hourLabel);
 
         let hourIcon = document.createElement("div");
@@ -500,6 +498,8 @@ function createCard(weatherData, lat, lon, units) {
         hourTemp.classList.add("hour-temp");
         hourTemp.innerHTML = `${Math.round(hour.temp)}<span class="temp-symbol">°</span>`;
         hourWrapper.appendChild(hourTemp);
+
+        hourlyForecast.appendChild(hourWrapper);
     });
 
     let miscWeatherData = document.createElement("div");
@@ -796,7 +796,7 @@ function updateCard(card, weatherData, tempFormat) {
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         let formattedTime = `${hours}${ampm}`;
-        hourLabel.innerText = formattedTime;
+        hourLabel.textContent = formattedTime;
         hourWrapper.appendChild(hourLabel);
 
         let hourIcon = document.createElement("div");
