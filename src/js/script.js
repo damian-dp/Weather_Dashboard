@@ -204,20 +204,26 @@ async function getWeatherData(lat, lon, units) {
             `/api/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
         );
 
-        if (!response.ok) {
-            throw new Error(`API call failed with status ${response.status}`);
-        }
-
         let text = await response.text();
         console.log('Raw API response:', text);
+
+        if (!response.ok) {
+            console.error(`API call failed with status ${response.status}`);
+            console.error('Response body:', text);
+            throw new Error(`API call failed with status ${response.status}`);
+        }
 
         let data;
         try {
             data = JSON.parse(text);
         } catch (parseError) {
             console.error('Error parsing JSON:', parseError);
-            console.log('Problematic JSON string:', text);
-            throw new Error('Invalid JSON response from API');
+            console.error('Problematic response:', text);
+            if (text.trim().startsWith('<')) {
+                throw new Error('API returned HTML instead of JSON. There might be a server-side error.');
+            } else {
+                throw new Error('Invalid JSON response from API');
+            }
         }
 
         // Fetch city and country information
@@ -306,6 +312,11 @@ async function renderInitialCard() {
         });
     } catch (error) {
         console.error("Error getting user location or weather data:", error);
+        // Display error message to the user
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.textContent = `An error occurred: ${error.message}. Please try again later.`;
+        cardsWrapper.appendChild(errorMessage);
     } finally {
         console.log("Render initial card process completed");
         hideLoadingOverlay();
