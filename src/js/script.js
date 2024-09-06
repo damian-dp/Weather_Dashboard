@@ -199,46 +199,61 @@ async function getWeatherDataByLocation(location, units) {
 }
 
 async function getWeatherData(lat, lon, units) {
-    let response = await fetch(
-        `/api/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
-    );
+    try {
+        let response = await fetch(
+            `/api/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`
+        );
 
-    if (!response.ok) {
-        throw new Error(`API call failed with status ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`API call failed with status ${response.status}`);
+        }
+
+        let text = await response.text();
+        console.log('Raw API response:', text);
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error('Error parsing JSON:', parseError);
+            console.log('Problematic JSON string:', text);
+            throw new Error('Invalid JSON response from API');
+        }
+
+        // Fetch city and country information
+        let geoResponse = await fetch(
+            `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`
+        );
+        let geoData = await geoResponse.json();
+        
+        let cityCountry;
+        if (geoData[0]) {
+            const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(geoData[0].country);
+            cityCountry = `${geoData[0].name}, ${countryName}`;
+        } else {
+            cityCountry = data.timezone;
+        }
+
+        return {
+            location: cityCountry,
+            lat: lat,
+            lon: lon,
+            currentTemp: data.current.temp,
+            currentDesc: data.current.weather[0].description,
+            currentIcon: data.current.weather[0].icon,
+            feelsLike: data.current.feels_like,
+            highTemp: data.daily[0].temp.max,
+            lowTemp: data.daily[0].temp.min,
+            humidity: data.current.humidity,
+            uvIndex: data.current.uvi,
+            wind: data.current.wind_speed,
+            pressure: data.current.pressure,
+            hourly: data.hourly.slice(0, 12), // Get next 12 hours forecast
+        };
+    } catch (error) {
+        console.error('Error in getWeatherData:', error);
+        throw error;
     }
-
-    let data = await response.json();
-
-    // Fetch city and country information
-    let geoResponse = await fetch(
-        `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`
-    );
-    let geoData = await geoResponse.json();
-    
-    let cityCountry;
-    if (geoData[0]) {
-        const countryName = new Intl.DisplayNames(['en'], { type: 'region' }).of(geoData[0].country);
-        cityCountry = `${geoData[0].name}, ${countryName}`;
-    } else {
-        cityCountry = data.timezone;
-    }
-
-    return {
-        location: cityCountry,
-        lat: lat,
-        lon: lon,
-        currentTemp: data.current.temp,
-        currentDesc: data.current.weather[0].description,
-        currentIcon: data.current.weather[0].icon,
-        feelsLike: data.current.feels_like,
-        highTemp: data.daily[0].temp.max,
-        lowTemp: data.daily[0].temp.min,
-        humidity: data.current.humidity,
-        uvIndex: data.current.uvi,
-        wind: data.current.wind_speed,
-        pressure: data.current.pressure,
-        hourly: data.hourly.slice(0, 12), // Get next 12 hours forecast
-    };
 }
 
 async function getUserLocation() {
