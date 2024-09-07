@@ -13,8 +13,6 @@ export let isAddingCard = false;
 export let lightModeToggle, darkModeToggle;
 
 console.log('Main.js loaded');
-console.log('window.env:', window.env);
-console.log('Config keys:', { OPENWEATHER_API_KEY, GOOGLE_MAPS_API_KEY });
 
 if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
   console.error('API keys are not set. Please check your environment variables or env.js file.');
@@ -22,7 +20,6 @@ if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
 
 if (!window.env || !window.env.OPENWEATHER_API_KEY || !window.env.GOOGLE_MAPS_API_KEY) {
   console.error('Environment variables are not set correctly');
-  console.log('window.env:', window.env);
 }
 
 async function initializeApp() {
