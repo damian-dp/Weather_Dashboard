@@ -1,80 +1,78 @@
-import { lightModeToggle, darkModeToggle } from './main.js';
-import { initMap } from './map.js';
+import { initializeMaps } from './map.js';
 
 export function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
-    const isDarkMode = savedTheme === 'dark';
-
-    document.documentElement.classList.toggle('dark-mode', isDarkMode);
-    document.documentElement.classList.toggle('light-mode', !isDarkMode);
-
-    lightModeToggle.style.display = isDarkMode ? 'none' : 'flex';
-    darkModeToggle.style.display = isDarkMode ? 'flex' : 'none';
+    document.documentElement.classList.add(`${savedTheme}-mode`);
+    updateThemeToggleVisibility(savedTheme);
 }
 
 export function toggleTheme() {
+    const isDarkMode = document.documentElement.classList.contains('dark-mode');
     const flexibleSpacers = document.querySelectorAll('.flexible-spacer');
     const mapContainers = document.querySelectorAll('.map-container');
-    const mapGradients = document.querySelectorAll('.flexible-spacer::before');
-    const transitionDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--transition-duration')) * 1000;
-    
-    // Immediately fade out flexible spacers, map containers, and map gradients
+    const mapGradients = document.querySelectorAll('.map-gradient');
+
+    // Fade out flexible spacers, map containers, and gradients
     flexibleSpacers.forEach(spacer => {
+        spacer.style.transition = 'opacity 0.3s ease-in-out';
         spacer.style.opacity = '0';
     });
     mapContainers.forEach(container => {
+        container.style.transition = 'opacity 0.3s ease-in-out';
         container.style.opacity = '0';
     });
     mapGradients.forEach(gradient => {
+        gradient.style.transition = 'opacity 0.3s ease-in-out';
         gradient.style.opacity = '0';
     });
 
-    // Delay the theme toggle and other changes
+    // Delay the theme toggle to allow fade out
     setTimeout(() => {
         // Toggle theme
-        const isDarkMode = document.documentElement.classList.toggle('dark-mode');
-        document.documentElement.classList.toggle('light-mode', !isDarkMode);
+        document.documentElement.classList.toggle('dark-mode');
+        document.documentElement.classList.toggle('light-mode');
         
         // Update localStorage
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
 
         // Toggle button visibility
-        lightModeToggle.style.display = isDarkMode ? 'none' : 'flex';
-        darkModeToggle.style.display = isDarkMode ? 'flex' : 'none';
-
-        // Remove hover-ready class from both buttons
-        lightModeToggle.classList.remove('hover-ready');
-        darkModeToggle.classList.remove('hover-ready');
+        updateThemeToggleVisibility(isDarkMode ? 'light' : 'dark');
 
         // Update map background color
         document.documentElement.style.setProperty('--map-background-color', getComputedStyle(document.documentElement).getPropertyValue('--background-color'));
         document.documentElement.style.setProperty('--map-background-color-rgb', getComputedStyle(document.documentElement).getPropertyValue('--background-color-rgb'));
 
-        // Update all maps
-        mapContainers.forEach(container => {
-            const lat = parseFloat(container.closest('.card').dataset.lat);
-            const lon = parseFloat(container.closest('.card').dataset.lon);
-            initMap(container, lat, lon);
-        });
+        // Reinitialize maps with new theme
+        initializeMaps();
 
         // Fade in flexible spacers, map containers, and gradients
         setTimeout(() => {
             flexibleSpacers.forEach(spacer => {
-                spacer.style.transition = `opacity var(--transition-duration) var(--transition-easing)`;
                 spacer.style.opacity = '1';
             });
             mapContainers.forEach(container => {
-                container.style.transition = `opacity var(--transition-duration) var(--transition-easing)`;
                 container.style.opacity = '1';
             });
             mapGradients.forEach(gradient => {
-                gradient.style.transition = `opacity var(--transition-duration) var(--transition-easing)`;
                 gradient.style.opacity = '1';
             });
-        }, 200);
-    }, 250);
+        }, 50);
+    }, 300);
+}
+
+function updateThemeToggleVisibility(theme) {
+    const lightModeToggle = document.getElementById('light-mode-toggle');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    if (theme === 'dark') {
+        lightModeToggle.style.display = 'flex';
+        darkModeToggle.style.display = 'none';
+    } else {
+        lightModeToggle.style.display = 'none';
+        darkModeToggle.style.display = 'flex';
+    }
 }
 
 export function handleButtonMouseLeave(button) {
-    button.classList.add('hover-ready');
+    button.classList.remove('hover-ready');
 }

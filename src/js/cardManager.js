@@ -408,6 +408,8 @@ export async function updateAllCards(units) {
         try {
             const weatherData = await getWeatherData(lat, lon, units);
             await updateCard(card, weatherData, units === "metric" ? "C" : "F");
+            // Reload SVG icons after updating the card
+            await loadAllSvgIcons(card);
         } catch (error) {
             console.error(`Error updating card with lat: ${lat}, lon: ${lon}`, error);
         }

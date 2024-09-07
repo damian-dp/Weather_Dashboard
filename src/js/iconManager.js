@@ -39,20 +39,21 @@ export async function getSvgContent(iconCode) {
         .then(svgText => {
             if (svgText.trim().startsWith('<svg')) {
                 return svgText;
-            } else if (svgText.includes('<html')) {
-                return getFallbackSvg(iconCode);
             } else {
+                console.error(`Invalid SVG content for icon code: ${iconCode}`);
                 return getFallbackSvg(iconCode);
             }
         })
         .catch(error => {
+            console.error(`Error fetching SVG for icon code ${iconCode}:`, error);
             return getFallbackSvg(iconCode);
         });
 }
 
 function getFallbackSvg(iconCode) {
-    // Provide a simple fallback SVG based on the icon code
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="12">${iconCode}</text>
+    // Implement a fallback SVG or return a placeholder
+    return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" fill="#ccc"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#666">${iconCode}</text>
     </svg>`;
 }

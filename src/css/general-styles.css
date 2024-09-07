@@ -55,7 +55,7 @@ button, input[type="submit"], input[type="reset"] {
     --secondary-color: rgba(29, 29, 29, 0.40);
     --tertiary-color: rgba(29, 29, 29, 0.20);
     --background-color: #FFF9F1;
-    --background-color-rgb: 255, 249, 241; /* Add this line */
+    --background-color-rgb: 255, 249, 241;
     --solid-color: white;
     --transition-duration: 0.3s;
     --transition-easing: ease-in-out;
@@ -65,8 +65,8 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 body, h1, h2, h3, h4, h5, h6, p, a, span, div {
-    color: var(--primary-color);
     transition: var(--theme-transition);
+    color: var(--primary-color);
     font-weight: inherit;
     font-family: inherit;
     font-size: 1.25rem;
@@ -78,6 +78,7 @@ body {
     font-weight: 300;
     background-color: var(--background-color);
     color: var(--primary-color);
+    transition: var(--theme-transition);
 }
 
 .page-wrapper {
@@ -98,7 +99,7 @@ body {
     --secondary-color: rgba(255, 255, 255, 0.40);
     --tertiary-color: rgba(255, 255, 255, 0.20);
     --background-color: #191919;
-    --background-color-rgb: 25, 25, 25; /* Add this line */
+    --background-color-rgb: 25, 25, 25;
     --solid-color: rgb(24, 24, 24);
     --map-background-color: #191919;
     --map-background-color-rgb: 25, 25, 25;
@@ -169,4 +170,24 @@ svg, svg * {
 .loading-overlay.fade-out {
     opacity: 0;
     visibility: hidden;
+}
+
+/* Add transitions to other elements */
+.card, .card-head, .card-hero-section, .card-hero-column, .temp-ranges, .hourly-forecast-container, .misc-weather-data {
+    transition: var(--theme-transition);
+}
+
+/* Add specific transitions for SVG elements */
+svg, svg path, svg rect, svg circle {
+    transition: fill 0.3s ease-in-out, stroke 0.3s ease-in-out;
+}
+
+/* Ensure text elements transition smoothly */
+.card-location, .currentTemp, .currentDesc, .temp-range-item, .hour-label, .hour-temp, .misc-data-label, .misc-data-value {
+    transition: color 0.3s ease-in-out;
+}
+
+/* Add transitions to buttons and interactive elements */
+button, .switch, .slider {
+    transition: var(--theme-transition);
 }
