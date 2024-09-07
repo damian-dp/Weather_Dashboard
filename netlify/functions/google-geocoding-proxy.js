@@ -3,9 +3,10 @@ const fetch = require('node-fetch');
 exports.handler = async function(event, context) {
   const { lat, lon, apiKey } = event.queryStringParameters;
   
-  if (apiKey !== process.env.OPENWEATHER_API_KEY) {
-    return { statusCode: 403, body: 'Unauthorized' };
-  }
+  // Remove this check entirely as we're not using the OpenWeather API key here
+  // if (apiKey !== process.env.OPENWEATHER_API_KEY) {
+  //   return { statusCode: 403, body: 'Unauthorized' };
+  // }
 
   if (!lat || !lon) {
     return {

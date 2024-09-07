@@ -1,16 +1,22 @@
 // This file should not contain actual API keys
 
 export const getOpenWeatherApiKey = () => {
-  return window.env?.REACT_APP_OPENWEATHER_API_KEY || 'OPENWEATHER_API_KEY_PLACEHOLDER';
+  const key = window.env?.OPENWEATHER_API_KEY || 'OPENWEATHER_API_KEY_PLACEHOLDER';
+  console.log('OpenWeather API Key:', key === 'OPENWEATHER_API_KEY_PLACEHOLDER' ? 'Not Set' : 'Set');
+  return key;
 };
 
 export const getGoogleMapsApiKey = () => {
-  return window.env?.REACT_APP_GOOGLE_MAPS_API_KEY || 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
+  const key = window.env?.GOOGLE_MAPS_API_KEY || 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
+  console.log('Google Maps API Key:', key === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER' ? 'Not Set' : 'Set');
+  return key;
 };
 
 // Helper function to get the base URL for API calls
 export const getApiBaseUrl = () => {
-  return window.location.hostname === 'localhost' 
+  const baseUrl = window.location.hostname === 'localhost' 
     ? 'http://localhost:8888/.netlify/functions'
     : '/.netlify/functions';
+  console.log('API Base URL:', baseUrl);
+  return baseUrl;
 };

@@ -17,6 +17,9 @@ console.log('Main.js loaded');
 const OPENWEATHER_API_KEY = getOpenWeatherApiKey();
 const GOOGLE_MAPS_API_KEY = getGoogleMapsApiKey();
 
+console.log('OpenWeather API Key:', OPENWEATHER_API_KEY === 'OPENWEATHER_API_KEY_PLACEHOLDER' ? 'Not Set' : 'Set');
+console.log('Google Maps API Key:', GOOGLE_MAPS_API_KEY === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER' ? 'Not Set' : 'Set');
+
 if (OPENWEATHER_API_KEY === 'OPENWEATHER_API_KEY_PLACEHOLDER' || GOOGLE_MAPS_API_KEY === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER') {
   console.error('API keys are not set. Please check your environment variables or env.js file.');
 }

@@ -4,12 +4,23 @@ exports.handler = async function(event, context) {
   const { lat, lon, units, apiKey } = event.queryStringParameters;
   
   if (apiKey !== process.env.OPENWEATHER_API_KEY) {
-    return { statusCode: 403, body: 'Unauthorized' };
+    return { 
+      statusCode: 403, 
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+      body: JSON.stringify({ error: 'Unauthorized' })
+    };
   }
 
   if (!lat || !lon || !units) {
     return {
       statusCode: 400,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
       body: JSON.stringify({ error: 'Missing required parameters: lat, lon, or units' })
     };
   }
@@ -23,6 +34,10 @@ exports.handler = async function(event, context) {
       console.error(`OpenWeatherMap API responded with status ${response.status}`);
       return {
         statusCode: response.status,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
         body: JSON.stringify({ error: `OpenWeatherMap API responded with status ${response.status}` })
       };
     }
