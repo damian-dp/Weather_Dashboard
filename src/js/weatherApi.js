@@ -7,7 +7,9 @@ export async function getWeatherDataByLocation(location, units) {
     const geocodingResponse = await fetch(url);
 
     if (!geocodingResponse.ok) {
-        throw new Error(`Geocoding API call failed with status ${geocodingResponse.status}`);
+        const errorText = await geocodingResponse.text();
+        console.error('Geocoding API error response:', errorText);
+        throw new Error(`Geocoding API call failed with status ${geocodingResponse.status}: ${errorText}`);
     }
 
     const geocodingData = await geocodingResponse.json();

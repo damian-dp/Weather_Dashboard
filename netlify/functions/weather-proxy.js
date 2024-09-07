@@ -29,19 +29,22 @@ exports.handler = async function(event, context) {
   }
 
   const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${process.env.OPENWEATHER_API_KEY}`;
+  console.log('OpenWeatherMap API URL:', url);
 
   try {
     const response = await fetch(url);
     
     if (!response.ok) {
       console.error(`OpenWeatherMap API responded with status ${response.status}`);
+      const errorText = await response.text();
+      console.error('OpenWeatherMap API error response:', errorText);
       return {
         statusCode: response.status,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers": "Content-Type",
         },
-        body: JSON.stringify({ error: `OpenWeatherMap API responded with status ${response.status}` })
+        body: JSON.stringify({ error: `OpenWeatherMap API responded with status ${response.status}`, details: errorText })
       };
     }
 
