@@ -3,6 +3,9 @@ const fetch = require('node-fetch');
 exports.handler = async function(event, context) {
   const { lat, lon, units, apiKey } = event.queryStringParameters;
   
+  console.log('Received API Key:', apiKey);
+  console.log('Environment API Key:', process.env.OPENWEATHER_API_KEY);
+
   if (apiKey !== process.env.OPENWEATHER_API_KEY) {
     return { 
       statusCode: 403, 
@@ -10,7 +13,7 @@ exports.handler = async function(event, context) {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
       },
-      body: JSON.stringify({ error: 'Unauthorized' })
+      body: JSON.stringify({ error: 'Unauthorized', receivedKey: apiKey, envKey: process.env.OPENWEATHER_API_KEY })
     };
   }
 

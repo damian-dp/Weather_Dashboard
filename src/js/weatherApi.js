@@ -1,7 +1,9 @@
 import { getApiBaseUrl, getOpenWeatherApiKey } from './config.js';
 
 export async function getWeatherDataByLocation(location, units) {
-    const url = `${getApiBaseUrl()}/geocoding-proxy?location=${encodeURIComponent(location)}&apiKey=${getOpenWeatherApiKey()}`;
+    const apiKey = getOpenWeatherApiKey();
+    console.log('Sending API Key:', apiKey);
+    const url = `${getApiBaseUrl()}/geocoding-proxy?location=${encodeURIComponent(location)}&apiKey=${apiKey}`;
     const geocodingResponse = await fetch(url);
 
     if (!geocodingResponse.ok) {
@@ -20,10 +22,14 @@ export async function getWeatherDataByLocation(location, units) {
 }
 
 export async function getWeatherData(lat, lon, units) {
-    const url = `${getApiBaseUrl()}/weather-proxy?lat=${lat}&lon=${lon}&units=${units}&apiKey=${getOpenWeatherApiKey()}`;
+    const apiKey = getOpenWeatherApiKey();
+    console.log('Sending API Key:', apiKey);
+    const url = `${getApiBaseUrl()}/weather-proxy?lat=${lat}&lon=${lon}&units=${units}&apiKey=${apiKey}`;
     const response = await fetch(url);
     if (!response.ok) {
-        throw new Error(`API call failed with status ${response.status}`);
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(`API call failed with status ${response.status}: ${JSON.stringify(errorData)}`);
     }
     const data = await response.json();
     if (!data || !data.current) {
