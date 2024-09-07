@@ -3,9 +3,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: background-color var(--transition-duration) var(--transition-easing),
-                color var(--transition-duration) var(--transition-easing),
-                border-color var(--transition-duration) var(--transition-easing);
 }
 
 button, input[type="submit"], input[type="reset"] {
@@ -64,12 +61,12 @@ button, input[type="submit"], input[type="reset"] {
     --transition-easing: ease-in-out;
     --map-background-color: #FFF9F1;
     --map-background-color-rgb: 255, 249, 241;
+    --theme-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out, fill 0.3s ease-in-out, stroke 0.3s ease-in-out;
 }
 
 body, h1, h2, h3, h4, h5, h6, p, a, span, div {
     color: var(--primary-color);
-    transition: color var(--transition-duration) var(--transition-easing),
-                background-color var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
     font-weight: inherit;
     font-family: inherit;
     font-size: 1.25rem;
@@ -109,7 +106,7 @@ body {
 
 html {
     background-color: var(--background-color);
-    transition: background-color var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 #loading-overlay {
@@ -147,14 +144,11 @@ html {
 }
 
 svg, svg * {
-    transition: fill var(--transition-duration) var(--transition-easing),
-                stroke var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 *::before, *::after {
-    transition: background-color var(--transition-duration) var(--transition-easing), 
-                color var(--transition-duration) var(--transition-easing), 
-                border-color var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 .loading-overlay {

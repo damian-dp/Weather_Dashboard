@@ -1,10 +1,10 @@
 [build]
   publish = "src"
-  functions = "functions"
+  functions = "netlify/functions"
 
 [dev]
   publish = "src"
-  functions = "functions"
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/*"
@@ -12,23 +12,20 @@
   status = 200
 
 [[redirects]]
-    from = "/env.js"
-    to = "/src/env.js"
-    status = 200
+  from = "/env.js"
+  to = "/src/env.js"
+  status = 200
 
 [build.environment]
-    NODE_VERSION = "14"
-
-[functions]
-    directory = "functions"
+  NODE_VERSION = "18"
 
 [[headers]]
-    for = "/*.svg"
-    [headers.values]
+  for = "/*.svg"
+  [headers.values]
     Content-Type = "image/svg+xml"
 
 [[headers]]
-    for = "/env.js"
-    [headers.values]
+  for = "/env.js"
+  [headers.values]
     Content-Type = "application/javascript"
     Access-Control-Allow-Origin = "*"

@@ -1,49 +1,50 @@
-const axios = require('axios');
+const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  console.log('Function invoked with query parameters:', event.queryStringParameters);
-  const { lat, lon, units, apiKey } = event.queryStringParameters;
-  const finalApiKey = apiKey || process.env.OPENWEATHER_API_KEY;
+  const { lat, lon, units } = event.queryStringParameters;
+  const apiKey = process.env.OPENWEATHER_API_KEY;
 
-  console.log('API Key available:', !!finalApiKey);
-  console.log('API Key:', finalApiKey); // Log the actual API key for debugging
-
-  if (!finalApiKey) {
-    console.error('API key is not set');
+  if (!lat || !lon || !units) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'API key is not set' })
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Missing required parameters: lat, lon, or units' })
     };
   }
 
-  const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${finalApiKey}`;
-  console.log('Full URL being requested:', url);
+  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${apiKey}`;
 
   try {
-    const response = await axios.get(url);
-    console.log('Successful response from OpenWeather API');
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      console.error(`OpenWeather API responded with status ${response.status}`);
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: `OpenWeather API responded with status ${response.status}` })
+      };
+    }
+
+    const data = await response.json();
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*", // Allow all origins
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
       },
-      body: JSON.stringify(response.data)
+      body: JSON.stringify(data)
     };
   } catch (error) {
-    console.error('Error from OpenWeather API:', error.message);
-    console.error('Error details:', error.response?.data);
+    console.error('Error fetching weather data:', error);
     return {
-      statusCode: error.response?.status || 500,
+      statusCode: 500,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
       },
       body: JSON.stringify({
-        error: error.message,
-        details: error.response?.data || 'No additional details',
-        url: url // Include the requested URL in the error response
+        error: 'Failed fetching weather data',
+        details: error.message
       })
     };
   }
-}
+};

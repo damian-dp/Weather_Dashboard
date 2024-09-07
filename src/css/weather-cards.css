@@ -3,33 +3,28 @@
     width: 600px;
     display: flex;
     flex-direction: column;
-    transition: border-color var(--transition-duration) var(--transition-easing), 
-                background-color var(--transition-duration) var(--transition-easing), 
-                color var(--transition-duration) var(--transition-easing);
     height: auto;
     min-height: 100%;
     overflow-y: auto;
-    transform: translateX(-100%);
-    opacity: 1;
     background-color: var(--background-color);
-    transition: transform 0.5s ease-out,
-                opacity 0.5s ease-out,
-                background-color var(--transition-duration) var(--transition-easing);
-    z-index: 1;
+    z-index: 2;
     flex: 0 0 auto;
+    position: relative;
+    transition: var(--theme-transition), transform 0.5s ease-out;
 }
 
 #cards-wrapper {
     display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
     min-height: 100%;
     padding-bottom: 20px;
-    transition: width 0.5s ease-out;
+    transition: width 0.4s ease-out;
 }
 
 .weather-cards {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     height: calc(100vh - 60px); /* Adjust 60px to match your navbar height */
     overflow-x: auto;
     overflow-y: hidden;
@@ -48,7 +43,6 @@
     justify-content: center;
     display: flex;
     padding-bottom: 4px;
-    transition: opacity var(--transition-duration) var(--transition-easing);
     position: sticky;
     right: 2rem;
 }
@@ -58,7 +52,7 @@
 }
 
 .button-wrapper {
-    flex-shrink: 0;
+    padding-left: 20px;
     padding-right: 300px;
     height: 100%;
     display: flex;
@@ -91,7 +85,7 @@
     pointer-events: none;
     z-index: 1;
     background-color: var(--background-color);
-    transition: background-color var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 .hourly-forecast-container::before {
@@ -148,12 +142,12 @@
     width: 100%;
     height: 100%;
     fill: var(--primary-color);
-    transition: fill var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 .hour-icon svg *, .card-hero-icon svg * {
     fill: var(--primary-color);
-    transition: fill var(--transition-duration) var(--transition-easing);
+    transition: var(--theme-transition);
 }
 
 .hour-temp {
@@ -350,7 +344,7 @@ h1.currentTemp {
     min-height: 100px;
     opacity: 1;
     margin-top: 1.5rem;
-    transition: opacity 0.2s ease-out;
+    transition: none;
 }
 
 .flexible-spacer::before {
@@ -365,7 +359,7 @@ h1.currentTemp {
                 rgba(var(--map-background-color-rgb), 0.55) 100%);
     z-index: 1;
     pointer-events: none;
-    transition: opacity 0.2s ease-out;
+    transition: none;
 }
 
 .map-container {
@@ -377,7 +371,7 @@ h1.currentTemp {
     width: 100%;
     height: calc(100% + 120px);
     background-color: var(--map-background-color);
-    transition: opacity 0.2s ease-out;
+    transition: none;
 }
 
 .dark-mode .map-container {
@@ -412,37 +406,6 @@ h1.currentTemp {
     opacity: 0.7;
 }
 
-@keyframes slideIn {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.card {
-    transform: translateX(-100%);
-    opacity: 1;
-    background-color: var(--background-color);
-    transition: transform 0.5s ease-out,
-                opacity 0.5s ease-out,
-                background-color var(--transition-duration) var(--transition-easing);
-    z-index: 1;
-    flex: 0 0 auto;
-}
-
-.card.slide-in {
-    transform: translateX(0);
-}
-
-.card.new-card {
-    z-index: 0;
-}
-
-.card.initial-card {
-    transform: translateX(0);
-    opacity: 1;
+.z-index-behind {
+    z-index: -1;
 }
