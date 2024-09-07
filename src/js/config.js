@@ -1,11 +1,11 @@
 // This file should not contain actual API keys
 
 export const getOpenWeatherApiKey = () => {
-  return 'OPENWEATHER_API_KEY_PLACEHOLDER';
+  return process.env.REACT_APP_OPENWEATHER_API_KEY || 'OPENWEATHER_API_KEY_PLACEHOLDER';
 };
 
 export const getGoogleMapsApiKey = () => {
-  return 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
+  return process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
 };
 
 // Helper function to get the base URL for API calls
