@@ -191,3 +191,18 @@ svg, svg path, svg rect, svg circle {
 button, .switch, .slider {
     transition: var(--theme-transition);
 }
+
+/* Add this to your existing CSS */
+.theme-transition,
+.theme-transition *:not(.map-container):not(.flexible-spacer),
+.theme-transition *:not(.map-container):not(.flexible-spacer):before,
+.theme-transition *:not(.map-container):not(.flexible-spacer):after {
+    transition: all 0.3s ease-in-out !important;
+    transition-delay: 0s !important;
+}
+
+/* Ensure map-container and flexible-spacer don't have transitions */
+.map-container,
+.flexible-spacer {
+    transition: none !important;
+}
