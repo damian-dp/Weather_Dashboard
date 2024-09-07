@@ -1,12 +1,10 @@
 // This file should not contain actual API keys
 
 export const getOpenWeatherApiKey = () => {
-  // This will be replaced by the Netlify function
   return 'OPENWEATHER_API_KEY_PLACEHOLDER';
 };
 
 export const getGoogleMapsApiKey = () => {
-  // This will be replaced by the Netlify function
   return 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
 };
 
