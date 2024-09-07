@@ -13,7 +13,7 @@
 
 [[redirects]]
   from = "/env.js"
-  to = "/src/env.js"
+  to = "/env.js"
   status = 200
 
 [build.environment]

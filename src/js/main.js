@@ -22,6 +22,10 @@ if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
   console.error('API keys are not set. Please check your environment variables or env.js file.');
 }
 
+if (!window.env || !window.env.OPENWEATHER_API_KEY || !window.env.GOOGLE_MAPS_API_KEY) {
+  console.error('Environment variables are not set correctly');
+}
+
 async function initializeApp() {
   showLoadingOverlay();
   

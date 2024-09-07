@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install && cd netlify/functions && npm install",
-    "postbuild": "cp -r netlify/functions src/"
+    "postbuild": "echo 'Build completed'"
   },
   "keywords": [],
   "author": "",
