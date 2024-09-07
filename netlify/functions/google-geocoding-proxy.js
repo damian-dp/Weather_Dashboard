@@ -1,8 +1,13 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  const { lat, lon } = event.queryStringParameters;
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+  const { lat, lon, apiKey } = event.queryStringParameters;
+  
+  if (apiKey !== 'OPENWEATHER_API_KEY_PLACEHOLDER') {
+    return { statusCode: 403, body: 'Unauthorized' };
+  }
+
+  const realApiKey = process.env.GOOGLE_MAPS_API_KEY;
 
   if (!lat || !lon) {
     return {
@@ -11,7 +16,7 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${realApiKey}`;
 
   try {
     const response = await fetch(url);

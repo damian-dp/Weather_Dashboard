@@ -1,8 +1,13 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  const { location } = event.queryStringParameters;
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const { location, apiKey } = event.queryStringParameters;
+  
+  if (apiKey !== 'OPENWEATHER_API_KEY_PLACEHOLDER') {
+    return { statusCode: 403, body: 'Unauthorized' };
+  }
+
+  const realApiKey = process.env.OPENWEATHER_API_KEY;
 
   if (!location) {
     return {
@@ -11,7 +16,7 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${apiKey}`;
+  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${realApiKey}`;
 
   try {
     const response = await fetch(url);

@@ -1,7 +1,7 @@
-import { OPENWEATHER_API_KEY, GOOGLE_MAPS_API_KEY } from './config.js';
+import { getApiBaseUrl, getOpenWeatherApiKey } from './config.js';
 
 export async function getWeatherDataByLocation(location, units) {
-    const url = `/.netlify/functions/geocoding-proxy?location=${encodeURIComponent(location)}`;
+    const url = `${getApiBaseUrl()}/geocoding-proxy?location=${encodeURIComponent(location)}&apiKey=${getOpenWeatherApiKey()}`;
     const geocodingResponse = await fetch(url);
 
     if (!geocodingResponse.ok) {
@@ -20,7 +20,7 @@ export async function getWeatherDataByLocation(location, units) {
 }
 
 export async function getWeatherData(lat, lon, units) {
-    const url = `/.netlify/functions/weather-proxy?lat=${lat}&lon=${lon}&units=${units}`;
+    const url = `${getApiBaseUrl()}/weather-proxy?lat=${lat}&lon=${lon}&units=${units}&apiKey=${getOpenWeatherApiKey()}`;
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`API call failed with status ${response.status}`);
@@ -34,18 +34,8 @@ export async function getWeatherData(lat, lon, units) {
 
 export async function getLocationName(lat, lon) {
     try {
-        const response = await fetch(`/.netlify/functions/google-geocoding-proxy?lat=${lat}&lon=${lon}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const text = await response.text();
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            console.error("Failed to parse JSON:", text);
-            throw new Error("Invalid JSON response");
-        }
+        const response = await fetch(`${getApiBaseUrl()}/google-geocoding-proxy?lat=${lat}&lon=${lon}&apiKey=${getOpenWeatherApiKey()}`);
+        const data = await response.json();
         if (data.results && data.results.length > 0) {
             const result = data.results[0];
             let city = '';
