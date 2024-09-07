@@ -7,6 +7,7 @@ exports.handler = async function(event, context) {
   console.log('Environment API Key:', process.env.OPENWEATHER_API_KEY);
 
   if (apiKey !== process.env.OPENWEATHER_API_KEY) {
+    console.log('API Key mismatch');
     return { 
       statusCode: 403, 
       headers: {

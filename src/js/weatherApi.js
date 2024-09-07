@@ -27,6 +27,7 @@ export async function getWeatherData(lat, lon, units) {
     const apiKey = getOpenWeatherApiKey();
     console.log('Sending API Key:', apiKey);
     const url = `${getApiBaseUrl()}/weather-proxy?lat=${lat}&lon=${lon}&units=${units}&apiKey=${apiKey}`;
+    console.log('Weather API URL:', url);
     const response = await fetch(url);
     if (!response.ok) {
         const errorData = await response.json();
@@ -35,6 +36,7 @@ export async function getWeatherData(lat, lon, units) {
     }
     const data = await response.json();
     if (!data || !data.current) {
+        console.error('Invalid weather data:', data);
         throw new Error('Invalid weather data received from API');
     }
     return data;
