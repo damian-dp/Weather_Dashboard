@@ -7,6 +7,12 @@ function loadGoogleMapsAPI() {
         return googleMapsLoaded;
     }
 
+    const apiKey = getGoogleMapsApiKey();
+    if (apiKey === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER') {
+        console.error('Google Maps API key is not set');
+        return Promise.reject(new Error('Google Maps API key is not set'));
+    }
+
     googleMapsLoaded = new Promise((resolve, reject) => {
         if (window.google && window.google.maps) {
             resolve(window.google.maps);
@@ -157,6 +163,13 @@ export async function initMap(container, lat, lon) {
         map.setOptions({
             gestureHandling: 'none'
         });
+
+        // Add this check before any IntersectionObserver usage
+        if (map && map.getDiv() && document.body.contains(map.getDiv())) {
+            // Your IntersectionObserver code here
+        } else {
+            console.warn('Map container is not in the DOM, skipping IntersectionObserver');
+        }
     } catch (error) {
         console.error('Error creating Google Map:', error);
     }
@@ -170,4 +183,4 @@ export function initializeMaps() {
         const lon = parseFloat(card.dataset.lon);
         initMap(container, lat, lon);
     });
-} 
+}
