@@ -43,3 +43,4 @@ Thumbs.db
 *.backup
 
 env.js
+src/env.js

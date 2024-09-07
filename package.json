@@ -4,7 +4,7 @@
   "description": "A simple dashboard that shows the weather in one or multiple locations.",
   "main": "index.js",
   "scripts": {
-    "build": "npm install && cp src/env.js src/ && cd netlify/functions && npm install",
+    "build": "npm install && node create-env.js && cd netlify/functions && npm install",
     "postbuild": "echo 'Build completed'"
   },
   "keywords": [],

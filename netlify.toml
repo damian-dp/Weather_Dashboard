@@ -30,6 +30,3 @@
   [headers.values]
     Content-Type = "application/javascript"
     Access-Control-Allow-Origin = "*"
-
-[[plugins]]
-  package = "./netlify/plugins/inject-env"
