@@ -1,6 +1,6 @@
 import { initTheme } from './theme.js';
 import { updateCardsWrapperWidth, renderInitialCard } from './cardManager.js';
-import { OPENWEATHER_API_KEY, GOOGLE_MAPS_API_KEY } from './config.js';
+import { getOpenWeatherApiKey, getGoogleMapsApiKey } from './config.js'; // Update this line
 import { initializeEventListeners } from './eventListeners.js';
 import { initMap } from './map.js';
 import { showLoadingOverlay, hideLoadingOverlay, ensureMinimumLoadingTime } from './loading.js';
@@ -13,6 +13,9 @@ export let isAddingCard = false;
 export let lightModeToggle, darkModeToggle;
 
 console.log('Main.js loaded');
+
+const OPENWEATHER_API_KEY = getOpenWeatherApiKey();
+const GOOGLE_MAPS_API_KEY = getGoogleMapsApiKey();
 
 if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
   console.error('API keys are not set. Please check your environment variables or env.js file.');
@@ -33,7 +36,7 @@ async function initializeApp() {
       initTheme();
       initializeEventListeners();
       updateCardsWrapperWidth();
-      await renderInitialCard(); // Make sure this line is present
+      await renderInitialCard();
     });
   } catch (error) {
     console.error('Error initializing app:', error);
