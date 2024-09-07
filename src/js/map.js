@@ -1,19 +1,28 @@
 import { getGoogleMapsApiKey } from './config.js';
 
+let googleMapsLoaded = false;
+
 export function initMap(mapContainer, lat, lon) {
     return new Promise((resolve, reject) => {
-        if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        if (googleMapsLoaded) {
+            createMap(mapContainer, lat, lon);
+            resolve();
+        } else if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
             console.log('Google Maps API not loaded, loading now...');
             window.initMap = () => {
                 console.log('Google Maps API loaded');
+                googleMapsLoaded = true;
                 createMap(mapContainer, lat, lon);
                 resolve();
             };
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${getGoogleMapsApiKey()}&callback=initMap`;
-            document.head.appendChild(script);
+            if (!document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${getGoogleMapsApiKey()}&callback=initMap`;
+                document.head.appendChild(script);
+            }
         } else {
             console.log('Google Maps API already loaded');
+            googleMapsLoaded = true;
             createMap(mapContainer, lat, lon);
             resolve();
         }

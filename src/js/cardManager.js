@@ -90,11 +90,11 @@ export async function addNewCard(location, isInitialCard = false) {
         
         // Ensure all async operations are complete before resolving
         await Promise.all([
-            initMap(card.querySelector('.map-container'), lat, lon),
+            initMap(card.querySelector('.map-container'), lat, lon).catch(error => console.error("Error initializing map:", error)),
             getLocationName(lat, lon).then(locationName => {
                 card.querySelector('.card-location').innerText = locationName;
-            }),
-            loadAllSvgIcons(card)
+            }).catch(error => console.error("Error getting location name:", error)),
+            loadAllSvgIcons(card).catch(error => console.error("Error loading SVG icons:", error))
         ]);
 
         console.log(`All promises resolved for ${locationString}`);
@@ -378,11 +378,11 @@ export async function renderInitialCard() {
             
             // Initialize map and set location name
             await Promise.all([
-                initMap(card.querySelector('.map-container'), lat, lon),
+                initMap(card.querySelector('.map-container'), lat, lon).catch(error => console.error("Error initializing map:", error)),
                 getLocationName(lat, lon).then(locationName => {
                     card.querySelector('.card-location').innerText = locationName;
-                }),
-                loadAllSvgIcons(card)
+                }).catch(error => console.error("Error getting location name:", error)),
+                loadAllSvgIcons(card).catch(error => console.error("Error loading SVG icons:", error))
             ]);
             
             console.log("Initial card fully rendered");
