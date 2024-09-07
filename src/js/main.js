@@ -12,6 +12,8 @@ export let isAddingCard = false;
 
 export let lightModeToggle, darkModeToggle;
 
+console.log('Main.js loaded');
+console.log('window.env:', window.env);
 console.log('Config keys:', { OPENWEATHER_API_KEY, GOOGLE_MAPS_API_KEY });
 
 if (!OPENWEATHER_API_KEY || !GOOGLE_MAPS_API_KEY) {
