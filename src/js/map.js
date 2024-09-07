@@ -8,6 +8,7 @@ function loadGoogleMapsAPI() {
     }
 
     const apiKey = getGoogleMapsApiKey();
+    console.log('Google Maps API Key (first few characters):', apiKey.substring(0, 5) + '...');
     if (apiKey === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER') {
         console.error('Google Maps API key is not set');
         return Promise.reject(new Error('Google Maps API key is not set'));
@@ -29,10 +30,13 @@ function loadGoogleMapsAPI() {
         };
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${getGoogleMapsApiKey}&callback=initGoogleMaps`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initGoogleMaps`;
         script.async = true;
         script.defer = true;
-        script.onerror = reject;
+        script.onerror = (error) => {
+            console.error('Error loading Google Maps script:', error);
+            reject(error);
+        };
         document.head.appendChild(script);
     });
 
@@ -172,6 +176,8 @@ export async function initMap(container, lat, lon) {
         }
     } catch (error) {
         console.error('Error creating Google Map:', error);
+        // Display an error message in the map container
+        container.innerHTML = `<div style="color: red; text-align: center;">Error loading map: ${error.message}</div>`;
     }
 }
 
