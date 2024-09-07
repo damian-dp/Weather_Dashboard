@@ -7,13 +7,14 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
   from = "/env.js"
   to = "/env.js"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 [build.environment]
@@ -29,3 +30,6 @@
   [headers.values]
     Content-Type = "application/javascript"
     Access-Control-Allow-Origin = "*"
+
+[[plugins]]
+  package = "./netlify/plugins/inject-env"
