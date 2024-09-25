@@ -14,7 +14,7 @@ exports.handler = async function(event, context) {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type",
       },
-      body: JSON.stringify({ error: 'Unauthorized', receivedKey: apiKey, envKey: process.env.OPENWEATHER_API_KEY })
+      body: JSON.stringify({ error: 'Unauthorised', receivedKey: apiKey, envKey: process.env.OPENWEATHER_API_KEY })
     };
   }
 

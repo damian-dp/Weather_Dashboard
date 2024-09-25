@@ -25,9 +25,7 @@ export async function getWeatherDataByLocation(location, units) {
 
 export async function getWeatherData(lat, lon, units) {
     const apiKey = getOpenWeatherApiKey();
-    console.log('Sending API Key:', apiKey);
     const url = `${getApiBaseUrl()}/weather-proxy?lat=${lat}&lon=${lon}&units=${units}&apiKey=${apiKey}`;
-    console.log('Weather API URL:', url);
     const response = await fetch(url);
     if (!response.ok) {
         const errorData = await response.json();

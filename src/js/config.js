@@ -9,9 +9,7 @@ export const getOpenWeatherApiKey = () => {
 export const getGoogleMapsApiKey = () => {
   const key = window.env?.GOOGLE_MAPS_API_KEY || 'GOOGLE_MAPS_API_KEY_PLACEHOLDER';
   console.log('Google Maps API Key:', key === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER' ? 'Not Set' : 'Set');
-  if (key !== 'GOOGLE_MAPS_API_KEY_PLACEHOLDER') {
-    console.log('Google Maps API Key (first few characters):', key.substring(0, 5) + '...');
-  }
+  
   return key;
 };
 
