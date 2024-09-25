@@ -8,7 +8,6 @@ function loadGoogleMapsAPI() {
     }
 
     const apiKey = getGoogleMapsApiKey();
-    console.log('Google Maps API Key (first few characters):', apiKey.substring(0, 5) + '...');
     if (apiKey === 'GOOGLE_MAPS_API_KEY_PLACEHOLDER') {
         console.error('Google Maps API key is not set');
         return Promise.reject(new Error('Google Maps API key is not set'));
